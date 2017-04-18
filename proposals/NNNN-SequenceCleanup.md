@@ -19,8 +19,8 @@ All other default implementations of `Sequence` methods are realized on top of `
 
 Furthermore, the presence of `AnySequence` and `AnyIterator` it returns, present serious optimization obstacle for the Swift compiler, when we chain the calls to these sequence methods. This results is non-specialized generic iterator, that ends up in a tight for-in loop. Currently there is no `prefix` implementation on `LazySequence` - preventing the workaround for avoiding `AnySequence`  by going through `.lazy` call.
 
-```
-s.lazy.prefix(maxIterations).prefix(while:{...})
+```Swift
+s.lazy.prefix(maxIterations).prefix(while:{ ... })
 ```
 
 ## Proposed solution
@@ -29,10 +29,74 @@ We should take this opportunity to clean up the interface of default `Sequence` 
 
 ## Detailed design
 The following changes will be made to the standard library:
-```
+```Swift
 extension Sequence {
-  // TODO: detailed method signatures
+
+  public func suffix(_ maxLength: Int) -> [Iterator.Element] { ... }
+  
+  public func split(
+    maxSplits: Int = Int.max,
+    omittingEmptySubsequences: Bool = true,
+    whereSeparator isSeparator: (Iterator.Element) throws -> Bool
+  ) rethrows -> [[Iterator.Element]] { ... }
 }
+
+extension Sequence where Iterator.Element : Equatable {
+  public func split(
+    separator: Iterator.Element,
+    maxSplits: Int = Int.max,
+    omittingEmptySubsequences: Bool = true
+  ) -> [[Iterator.Element]] { ... }
+}
+
+extension Sequence where
+  SubSequence : Sequence,
+  SubSequence.Iterator.Element == Iterator.Element,
+  SubSequence.SubSequence == SubSequence {
+
+  /// Returns a subsequence containing all but the given number of initial
+  /// elements.
+  ...  
+  /// - Complexity: O(*n*), where *n* is the length of the sequence.
+  @_inlineable
+  public func dropFirst(_ n: Int) -> [Iterator.Element] { ... }
+
+  /// Returns a subsequence containing all but the given number of final
+  /// elements.
+  ...
+  /// - Complexity: O(*n*), where *n* is the length of the sequence.
+  @_inlineable
+  public func dropLast(_ n: Int) -> [Iterator.Element] { ... }
+  
+  /// Returns a subsequence by skipping the initial, consecutive elements that
+  /// satisfy the given predicate.
+  ...
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
+  /// - SeeAlso: `prefix(while:)`
+  @_inlineable
+  public func drop(
+    while predicate: (Iterator.Element) throws -> Bool
+  ) rethrows -> [Iterator.Element] { ... }
+
+  /// Returns a subsequence, up to the specified maximum length, containing the
+  /// initial elements of the sequence.
+  ...
+  /// - Complexity: O(*n*), where *n* is the length of the sequence.
+  @_inlineable
+  public func prefix(_ maxLength: Int) -> [Iterator.Element] { ... }
+  
+  /// Returns a subsequence containing the initial, consecutive elements that
+  /// satisfy the given predicate.
+  ...
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
+  /// - SeeAlso: `drop(while:)`
+  @_inlineable
+  public func prefix(
+    while predicate: (Iterator.Element) throws -> Bool
+  ) rethrows -> [Iterator.Element] { ... }
+}
+
+// TODO describe lazy views for prefix and dropFirst
 ```
 
 ## Source compatibility
