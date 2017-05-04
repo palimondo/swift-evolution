@@ -15,7 +15,7 @@ Swift-evolution thread: [Discussion thread topic for that proposal](https://list
 
 ## Motivation
 
-The enumerated() method defined in an extension on protocol Sequence always counts from 0.
+The `enumerated()` method defined in an extension on protocol Sequence always counts from 0.
 When you need the numbers to be counting up from different index, you have to post process 
 the resulting tuple in an inconvenient way.
 
@@ -32,7 +32,7 @@ being source compatible with Swift 3.
 ## Detailed design
 
 The proposed solution is to propagate the starting value to the internal counter on 
-`EnumeratedIterator` and set the default starting value to 0.
+`EnumeratedIterator` and set the default starting value to `0`.
 
 ```swift
 public struct EnumeratedIterator<
