@@ -1,4 +1,4 @@
-# Feature name
+# Enumerate from offset
 
 * Proposal: [SE-NNNN](NNNN-enumerate-from.md)
 * Authors: [Pavol Vaskovic](https://github.com/palimondo), [Author 2](https://github.com/swiftdev)
