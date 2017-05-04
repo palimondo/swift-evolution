@@ -15,7 +15,7 @@ Swift-evolution thread: [Discussion thread topic for that proposal](https://list
 
 ## Motivation
 
-The `enumerated()` method defined in an extension on protocol Sequence always counts from 0.
+The `enumerated()` method defined in an extension on protocol Sequence always counts from `0`.
 When you need the numbers to be counting up from different index, you have to post process 
 the resulting tuple in an inconvenient way.
 
@@ -102,9 +102,9 @@ use `zip` with the collection and half-open range. From [SR-0172 One-sided Range
  `Sequence.enumerated()` when you either want them non-zero-based i.e. 
  ` zip(1..., greeting)`, or want to flip the order i.e. `zip(greeting, 0...)`.
 
-Drawback of that approach is you need to use free function `zip`, forcing a break in 
+Drawback of this approach is that you need to use free function `zip`, forcing a break in 
 the chain of sequence operations, as there is currently no `zipped` method on `Sequence`.
 
 If this is the preffered approach, we should consider removing the `enumerated()` method
-altogether, as the limited usefullness in its current state hardly justifies the space 
+altogether, because the limited usefullness in its current state hardly justifies the space 
 on API surface it occupies.
