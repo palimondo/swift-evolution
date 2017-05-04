@@ -98,9 +98,10 @@ This change does affect the ABI and should be implemented before we freeze it.
 Currently proposed workaround for the lack of flexibility in `enumerated()` is to 
 use `zip` with the collection and half-open range. From [SR-0172 One-sided Ranges](https://github.com/apple/swift-evolution/blob/master/proposals/0172-one-sided-ranges.md):
 > Additionally, when the index is a countable type, `i...` should form a `Sequence` 
-> that counts up from `i` indefinitely. This is useful in forming variants of 
-> `Sequence.enumerated()` when you either want them non-zero-based i.e. 
-> ` zip(1..., greeting)`, or want to flip the order i.e. `zip(greeting, 0...)`.
+ that counts up from `i` indefinitely. This is useful in forming variants of 
+ `Sequence.enumerated()` when you either want them non-zero-based i.e. 
+ ` zip(1..., greeting)`, or want to flip the order i.e. `zip(greeting, 0...)`.
+
 Drawback of that approach is you need to use free function `zip`, forcing a break in 
 the chain of sequence operations, as there is currently no `zipped` method on `Sequence`.
 
